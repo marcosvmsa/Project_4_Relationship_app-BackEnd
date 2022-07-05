@@ -1,0 +1,14 @@
+version: '3'
+
+services:
+  database:
+    image: postgres:latest
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: s3nh@
+      POSTGRES_USER: marcos
+      POSTGRES_DB: dev
+    volumes:
+      - ./db-data/:/var/lib/postgresql/data/
