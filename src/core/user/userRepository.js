@@ -1,31 +1,111 @@
-const hashString = require('../../utils/hashString');
-const User = require('../../database/models/user_model');
+const { User } = require('../../database/models/user_model');
+const { hashString, compare } = require('../../utils/hashString');
+
+async function login(bodyEmail) {
+	try {
+		const findByEmail = await User.findOne({ where: { email: bodyEmail } });
+		if (findByEmail) {
+			const comparePassword = await compare(findByEmail.password);
+			if (comparePassword) {
+				return true;
+			}
+			return 'Password incorrect';
+		}
+		return 'User not founded';
+	} catch (error) {
+		// console.log(`Erro select User ${error}`);
+		return error;
+	}
+}
+
+async function select(body) {
+	const { email } = body;
+	console.log(email);
+	// const { searchBy, item } = body;
+	// try {
+	const project = await User.findOne({ where: { email } });
+	if (project) {
+		console.log('works');
+	} else {
+		console.log('not works');
+	}
+	// 	// console.log(project instanceof User); // true
+	// 	// console.log(project.title); // 'My Title'
+	// 	return 'User does not exist';
+	// } catch (error) {
+	// 	console.log(`Erro select User ${error}`);
+	// 	return error;
+	// }
+}
 
 async function create(body) {
 	const { password } = body;
-
 	try {
 		const hashPasswordValid = await hashString(password);
 		const user = {
 			...body,
 			password: hashPasswordValid,
 		};
-
+		// console.log(user);
 		const [data, created] = await User.findOrCreate({
 			where: { email: body.email },
 			defaults: {
-				user,
+				...user,
 			},
 		});
 
 		if (created) return { data, created };
+
 		return false;
 	} catch (error) {
+		// eslint-disable-next-line no-console
 		console.log(`Erro create User ${error}`);
-		return false;
+		return error;
+	}
+}
+
+async function update(param, body) {
+	const { password } = body;
+	let hashPasswordValid = body.password;
+	try {
+		const findById = await User.findOne({ where: { id: param } });
+		if (findById) {
+			const comparePassword = await compare(findById.password);
+			if (!comparePassword) {
+				hashPasswordValid = await hashString(password);
+			}
+		}
+
+		const user = {
+			...body,
+			password: hashPasswordValid,
+		};
+
+		return await User.update({
+			where: { email: body.email },
+			defaults: { ...user },
+		});
+	} catch (error) {
+		// eslint-disable-next-line no-console
+		console.log(`Erro create User ${error}`);
+		return error;
+	}
+}
+
+async function destroyUser(parmId) {
+	try {
+		await User.destroy({ where: { id: parmId } });
+		return true;
+	} catch (error) {
+		console.log(`Erro select User ${error}`);
+		return error;
 	}
 }
 
 module.exports = {
+	login,
+	select,
 	create,
+	update,
+	destroyUser,
 };

@@ -1,3 +1,3 @@
-require('dotenv').config()
+require('dotenv').config();
 require('./src/database/connection').initializeDatabase();
-require('./src/app')
+require('./src/app');
