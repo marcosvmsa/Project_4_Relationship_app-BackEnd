@@ -1,13 +1,18 @@
-version: '3'
+# Use postgres/example user/password credentials
+version: '3.1'
+
 services:
-  database:
-    image: postgres:latest
+
+  db:
+    image: postgres
     restart: always
     ports:
       - 5432:5432
     environment:
-      POSTGRES_PASSWORD: s3nh@
-      POSTGRES_USER: marcos
-      POSTGRES_DB: dev
-    volumes:
-      - ./db-data/:/var/lib/postgresql/data/
+      POSTGRES_PASSWORD: example
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080

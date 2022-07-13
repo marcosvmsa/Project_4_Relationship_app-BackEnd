@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+
 const userController = require('./core/user');
 
 const PORT = process.env.PORT || 4000;

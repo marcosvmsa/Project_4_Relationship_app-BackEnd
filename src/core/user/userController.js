@@ -26,9 +26,19 @@ async function createUser(req, res) {
 		return res.status(400).send(error);
 	}
 }
+
 async function updateUser(req, res) {
 	try {
 		const result = await Repository.update(req.params, req.body);
+		return res.status(201).send(result);
+	} catch (error) {
+		return res.status(400).send(error);
+	}
+}
+
+async function resetPassword(req, res) {
+	try {
+		const result = await Repository.reset(req.body);
 		return res.status(201).send(result);
 	} catch (error) {
 		return res.status(400).send(error);
@@ -49,5 +59,6 @@ module.exports = {
 	selecUser,
 	createUser,
 	updateUser,
+	resetPassword,
 	deleteUser,
 };
