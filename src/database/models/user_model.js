@@ -46,6 +46,8 @@ const User = sequelize.define('User', {
 	locationID: {
 		type: DataTypes.STRING,
 	},
+}, {
+	tableName: 'User',
 });
 
 module.exports = { User };

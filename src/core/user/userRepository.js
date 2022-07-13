@@ -48,7 +48,6 @@ async function create(body) {
 			...body,
 			password: hashPasswordValid,
 		};
-		// console.log(user);
 		const [data, created] = await User.findOrCreate({
 			where: { email: body.email },
 			defaults: {
@@ -57,7 +56,6 @@ async function create(body) {
 		});
 
 		if (created) return { data, created };
-
 		return false;
 	} catch (error) {
 		// eslint-disable-next-line no-console
@@ -75,17 +73,10 @@ async function update(param, body) {
 		if (findById) {
 			hashPasswordValid = await hashString(password);
 		}
-
-		console.log('como esta password', hashPasswordValid);
-
 		const user = {
 			...body,
 			password: hashPasswordValid,
 		};
-
-		console.log(user);
-		console.log('esse e : ', id);
-
 		const result = await User.update(
 			user,
 			{ where: { id } },
